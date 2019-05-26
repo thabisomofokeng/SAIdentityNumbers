@@ -1,0 +1,19 @@
+<p *ngIf="!validIdentityNumbers"><em>Loading...</em></p>
+<table class='table mt-3' *ngIf="validIdentityNumbers">
+  <thead>
+    <tr>
+      <th>Identity Number</th>
+      <th>Birth Date</th>
+      <th>Gender</th>
+      <th>Citizenship</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let identityNumber of validIdentityNumbers">
+      <td>{{ identityNumber.identityNumber }}</td>
+      <td>{{ identityNumber.birthDate }}</td>
+      <td>{{ identityNumber.gender }}</td>
+      <td>{{ identityNumber.citizenship }}</td>
+    </tr>
+  </tbody>
+</table>

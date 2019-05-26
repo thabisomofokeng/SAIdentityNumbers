@@ -1,0 +1,33 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Identity Number Input Validation</h1>
+</div>
+<!--<p>Please enter one or more SA Identity Numbers to validate below:</p>-->
+<div class="card mb-3">
+  <div class="card-header">
+    Please enter one or more SA Identity Numbers
+  </div>
+  <div class="card-body">
+    <div class="input-group mb-3" *ngFor="let item of identityNumbers; let i = index">
+      <input class="form-control" type="number" placeholder="Identity Number" [(ngModel)]="identityNumbers[i]" />
+      <div class="input-group-append" *ngIf="i == 0">
+        <button class="btn btn-success" (click)="addIdentityNumber(i)">+</button>
+      </div>
+      <div class="input-group-append" *ngIf="i > 0">
+        <button class="btn btn-danger" (click)="removeIdentityNumber(i)">&nbsp;-</button>
+      </div>
+    </div>
+    <button class="btn btn-primary" [disabled]="identityNumbers[0] == null ? true : null" (click)="validateIdentityNumbers()">Validate</button>
+  </div>
+</div>
+<ngb-tabset>
+  <ngb-tab title="Valid Identity Numbers">
+    <ng-template ngbTabContent>
+      <app-identity-numbers-valid></app-identity-numbers-valid>
+    </ng-template>
+  </ngb-tab>
+  <ngb-tab title="Invalid Identity Numbers">
+    <ng-template ngbTabContent>
+      <app-identity-numbers-invalid></app-identity-numbers-invalid>
+    </ng-template>
+  </ngb-tab>
+</ngb-tabset>

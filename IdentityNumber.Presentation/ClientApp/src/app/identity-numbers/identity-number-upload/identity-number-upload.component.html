@@ -1,0 +1,39 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Identity Number File Validation</h1>
+</div>
+<!--<p>Please upload a text file with SA Identity Numbers to validate below:</p>-->
+<div class="card mb-3">
+  <div class="card-header">
+    Please upload a text file (limit 5MB) with SA Identity Numbers
+  </div>
+  <div class="card-body">
+    <div class="input-group mb-3" *ngFor="let item of fileUploads; let i = index">
+      <div class="col-9">
+        <input class="form-control custom-file-input" type="file" id="file" (change)="handleFileInput($event.target.files, i)" />
+        <label class="custom-file-label" for="customFile">Choose file</label>
+      </div>
+      <div>
+        <div class="input-group-append" *ngIf="i == 0">
+          <button class="btn btn-success" (click)="addFileUpload(i)">+</button>
+        </div>
+        <div class="input-group-append" *ngIf="i > 0">
+          <button class="btn btn-danger" (click)="removeFileUpload(i)">&nbsp;-</button>
+        </div>
+      </div>
+      <div class="col" *ngIf="fileUploads[i] != null">{{fileUploads[i].name}}</div>
+    </div>
+    <button class="btn btn-primary" [disabled]="fileUploads[0] == null ? true : null" (click)="uploadAndValidateFiles()">Validate</button>
+  </div>
+</div>
+<ngb-tabset>
+  <ngb-tab title="Valid Identity Numbers">
+    <ng-template ngbTabContent>
+      <app-identity-numbers-valid></app-identity-numbers-valid>
+    </ng-template>
+  </ngb-tab>
+  <ngb-tab title="Invalid Identity Numbers">
+    <ng-template ngbTabContent>
+      <app-identity-numbers-invalid></app-identity-numbers-invalid>
+    </ng-template>
+  </ngb-tab>
+</ngb-tabset>

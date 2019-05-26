@@ -1,0 +1,15 @@
+<p *ngIf="!invalidIdentityNumbers"><em>Loading...</em></p>
+<table class='table' *ngIf="invalidIdentityNumbers">
+  <thead>
+    <tr>
+      <th>Identity Number</th>
+      <th>Reason Failed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let identityNumber of invalidIdentityNumbers">
+      <td>{{ identityNumber.identityNumber }}</td>
+      <td>{{ identityNumber.reasonsFailed }}</td>
+    </tr>
+  </tbody>
+</table>
