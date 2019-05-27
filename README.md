@@ -14,6 +14,7 @@ Solution design (N-tier)
 Testing
 
 - Solution includes unit tests for the Web Api
+- IdentityNumber.Infrastructure.Api has two test files for identity numbers upload validation. The valid and invalid identity numbers are saved and read from the ValidIdentityNumbers.csv and InvalidIdentityNumbers.csv files respectively.
 
 IDE
 
