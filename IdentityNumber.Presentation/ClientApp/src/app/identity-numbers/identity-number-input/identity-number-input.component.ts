@@ -10,6 +10,8 @@ import { IdentityNumbersInvalidComponent } from "../identity-numbers-invalid/ide
 })
 export class IdentityNumberInputComponent implements OnInit, AfterViewInit {
   identityNumbers: string[] = [];
+  error = null;
+  success = null;
 
   @ViewChild(IdentityNumbersValidComponent)
   private identityNumbersValidComponent: IdentityNumbersValidComponent;
@@ -37,12 +39,16 @@ export class IdentityNumberInputComponent implements OnInit, AfterViewInit {
   validateIdentityNumbers() {
     this.identityNumberService.validateIdentityNumbers<IIdentityNumberListModel>(this.identityNumbers).subscribe(
       result => {
+        this.success = result;
         this.identityNumbersValidComponent.validIdentityNumbers =
           this.identityNumbersValidComponent.validIdentityNumbers.concat(result.validIdentityNumbers);
         this.identityNumbersInvalidComponent.invalidIdentityNumbers =
           this.identityNumbersInvalidComponent.invalidIdentityNumbers.concat(result.invalidIdentityNumbers);
       },
-      error => console.error(error));
+      error => {
+        this.error = error;
+        console.log(error);
+      });
   }
 
 }

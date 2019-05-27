@@ -29,8 +29,9 @@ namespace IdentityNumber.Infrastructure.Api.Tests.UnitTests
             _fixture.MockValidIdentityNumberRepository.Setup(r => r.GetAsync()).ReturnsAsync(GetValidIdentityNumbers());
             _fixture.MockIdentityNumberService.Setup(s => s.GetValidAsync())
                 .ReturnsAsync(GetValidIdentityNumbers());
-            var controller = new IdentityNumberController(_fixture.Configuration, _fixture.MockLogger.Object,
-                _fixture.MockIdentityNumberService.Object);
+            var identityNumberService = new IdentityNumberService(_fixture.MockValidIdentityNumberRepository.Object,
+                _fixture.MockInvalidIdentityNumberRepository.Object);
+            var controller = new IdentityNumberController(_fixture.Configuration, identityNumberService);
 
             // Act
             var result = await controller.GetValidNumbersAsync();
@@ -51,8 +52,9 @@ namespace IdentityNumber.Infrastructure.Api.Tests.UnitTests
                 .ReturnsAsync(GetInvalidIdentityNumbers());
             _fixture.MockIdentityNumberService.Setup(s => s.GetInvalidAsync())
                 .ReturnsAsync(GetInvalidIdentityNumbers());
-            var controller = new IdentityNumberController(_fixture.Configuration, _fixture.MockLogger.Object,
-                _fixture.MockIdentityNumberService.Object);
+            var identityNumberService = new IdentityNumberService(_fixture.MockValidIdentityNumberRepository.Object,
+                _fixture.MockInvalidIdentityNumberRepository.Object);
+            var controller = new IdentityNumberController(_fixture.Configuration, identityNumberService);
 
             // Act
             var result = await controller.GetInvalidNumbersAsync();
@@ -69,11 +71,12 @@ namespace IdentityNumber.Infrastructure.Api.Tests.UnitTests
         public async Task PostNullIdentityNumbers_Test_ReturnsBadRequest()
         {
             // Arrange
-            var controller = new IdentityNumberController(_fixture.Configuration, _fixture.MockLogger.Object,
-                _fixture.MockIdentityNumberService.Object);
+            var identityNumberService = new IdentityNumberService(_fixture.MockValidIdentityNumberRepository.Object,
+                _fixture.MockInvalidIdentityNumberRepository.Object);
+            var controller = new IdentityNumberController(_fixture.Configuration, identityNumberService);
 
             // Act
-            var result = await controller.PostAsync(null);
+            var result = await controller.ValidateInputAsync(null);
 
             // Assert
             Assert.NotNull(result);
@@ -86,11 +89,11 @@ namespace IdentityNumber.Infrastructure.Api.Tests.UnitTests
             // Arrange
             var identityNumberService = new IdentityNumberService(_fixture.MockValidIdentityNumberRepository.Object,
                 _fixture.MockInvalidIdentityNumberRepository.Object);
-            var controller = new IdentityNumberController(_fixture.Configuration, _fixture.MockLogger.Object,
+            var controller = new IdentityNumberController(_fixture.Configuration,
                 identityNumberService);
 
             // Act
-            var result = await controller.PostAsync(GetIdentityNumbers());
+            var result = await controller.ValidateInputAsync(GetIdentityNumbers());
 
             // Assert
             Assert.NotNull(result);
@@ -105,11 +108,12 @@ namespace IdentityNumber.Infrastructure.Api.Tests.UnitTests
         public async Task PostUploadInvalidIdentityNumberFiles_Test_ReturnsBadRequest()
         {
             // Arrange
-            var controller = new IdentityNumberController(_fixture.Configuration, _fixture.MockLogger.Object,
-                _fixture.MockIdentityNumberService.Object);
+            var identityNumberService = new IdentityNumberService(_fixture.MockValidIdentityNumberRepository.Object,
+                _fixture.MockInvalidIdentityNumberRepository.Object);
+            var controller = new IdentityNumberController(_fixture.Configuration, identityNumberService);
 
             // Act
-            var result = await controller.UploadIdentityNumberFilesAsync(null);
+            var result = await controller.ValidateUploadFilesAsync(null);
 
             // Assert
             Assert.NotNull(result);
@@ -122,25 +126,23 @@ namespace IdentityNumber.Infrastructure.Api.Tests.UnitTests
             // Arrange
             var identityNumberService = new IdentityNumberService(_fixture.MockValidIdentityNumberRepository.Object,
                 _fixture.MockInvalidIdentityNumberRepository.Object);
-            var controller = new IdentityNumberController(_fixture.Configuration, _fixture.MockLogger.Object,
-                identityNumberService);
+            var controller = new IdentityNumberController(_fixture.Configuration, identityNumberService);
 
             var fileMock = new Mock<IFormFile>();
-            //Setup mock file using a memory stream
-            const string content = "8501015800088\r\n85010";
+            var content = "8501015800088" + Environment.NewLine + "85010" + Environment.NewLine;
             const string fileName = "IdentityNumbers.txt";
             var ms = new MemoryStream();
             var writer = new StreamWriter(ms);
             writer.Write(content);
             writer.Flush();
             ms.Position = 0;
-            ms.SetLength(1000);
+            ms.SetLength(content.Length);
             fileMock.Setup(_ => _.OpenReadStream()).Returns(ms);
             fileMock.Setup(_ => _.FileName).Returns(fileName);
             fileMock.Setup(_ => _.Length).Returns(ms.Length);
 
             // Act
-            var result = await controller.UploadIdentityNumberFilesAsync(new List<IFormFile> {fileMock.Object});
+            var result = await controller.ValidateUploadFilesAsync(new List<IFormFile> {fileMock.Object});
 
             // Assert
             Assert.NotNull(result);

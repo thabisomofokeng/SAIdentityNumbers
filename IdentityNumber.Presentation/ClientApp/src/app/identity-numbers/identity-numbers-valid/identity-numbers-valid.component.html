@@ -11,7 +11,7 @@
   <tbody>
     <tr *ngFor="let identityNumber of validIdentityNumbers">
       <td>{{ identityNumber.identityNumber }}</td>
-      <td>{{ identityNumber.birthDate }}</td>
+      <td>{{ identityNumber.birthDate | date }}</td>
       <td>{{ identityNumber.gender }}</td>
       <td>{{ identityNumber.citizenship }}</td>
     </tr>

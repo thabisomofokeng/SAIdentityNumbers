@@ -8,7 +8,7 @@ export class FileUploadService {
   constructor(private http: HttpClient, @Inject("BASE_API_URL") private baseUrl: string){}
 
   postFiles<T>(files: File[]): Observable<T> {
-    const endpoint = this.baseUrl + "api/identityNumbers/upload";
+    const endpoint = this.baseUrl + "api/identityNumbers/validateUploadFiles";
     const formData = new FormData();
     for (let file of files) {
       if (file == null)

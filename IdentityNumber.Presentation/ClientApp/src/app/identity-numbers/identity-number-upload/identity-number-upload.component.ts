@@ -9,7 +9,9 @@ import { IdentityNumbersInvalidComponent } from "../identity-numbers-invalid/ide
   templateUrl: "./identity-number-upload.component.html"
 })
 export class IdentityNumberUploadComponent implements OnInit, AfterViewInit {
-  fileUploads = [null] ;
+  fileUploads = [null];
+  error = null;
+  success = null;
 
   @ViewChild(IdentityNumbersValidComponent)
   private identityNumbersValidComponent: IdentityNumbersValidComponent;
@@ -40,12 +42,14 @@ export class IdentityNumberUploadComponent implements OnInit, AfterViewInit {
 
   uploadAndValidateFiles() {
     this.fileUploadService.postFiles<IIdentityNumberListModel>(this.fileUploads).subscribe(result => {
+      this.success = result;
       this.identityNumbersValidComponent.validIdentityNumbers =
         this.identityNumbersValidComponent.validIdentityNumbers.concat(result.validIdentityNumbers);
       this.identityNumbersInvalidComponent.invalidIdentityNumbers =
         this.identityNumbersInvalidComponent.invalidIdentityNumbers.concat(result.invalidIdentityNumbers);
-      },
+    },
       error => {
+        this.error = error;
         console.log(error);
       });
   }

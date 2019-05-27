@@ -11,7 +11,7 @@ namespace IdentityNumber.Domain.Services
 
         Task<IEnumerable<InvalidIdentityNumber>> GetInvalidAsync();
 
-        Task<Tuple<IEnumerable<ValidIdentityNumber>, IEnumerable<InvalidIdentityNumber>>> ProcessAsync(
+        Task<Tuple<IEnumerable<ValidIdentityNumber>, IEnumerable<InvalidIdentityNumber>>> ValidateAsync(
             List<string> identityNumbers);
     }
 }

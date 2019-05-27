@@ -23,13 +23,10 @@ namespace IdentityNumber.Infrastructure.Api.Helpers
                 }
             }
 
-            if (HasBinaryContent(string.Join("", lines)))
-                throw new InvalidOperationException($"{file.FileName} is not a valid text file");
-
             return lines;
         }
 
-        private static bool HasBinaryContent(string content)
+        public static bool HasBinaryContent(string content)
         {
             return content.Any(ch => char.IsControl(ch) && ch != '\r' && ch != '\n');
         }

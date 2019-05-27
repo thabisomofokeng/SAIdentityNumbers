@@ -16,6 +16,6 @@ export class IdentityNumberService {
   }
 
   validateIdentityNumbers<T>(identityNumbers: string[]): Observable<T> {
-    return this.http.post<T>(this.baseUrl + "api/identityNumbers", identityNumbers);
+    return this.http.post<T>(this.baseUrl + "api/identityNumbers/validateInput", identityNumbers);
   }
 }

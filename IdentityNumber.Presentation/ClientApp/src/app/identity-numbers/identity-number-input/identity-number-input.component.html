@@ -1,10 +1,15 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
   <h1 class="h2">Identity Number Input Validation</h1>
 </div>
-<!--<p>Please enter one or more SA Identity Numbers to validate below:</p>-->
+<div *ngIf="error" class="alert alert-danger" role="alert">
+  {{error.error}}
+</div>
+<div *ngIf="success" class="alert alert-success" role="alert">
+  Identity Numbers processed successfully, {{success.validIdentityNumbers.length}} valid and {{success.invalidIdentityNumbers.length}} invalid.
+</div>
 <div class="card mb-3">
   <div class="card-header">
-    Please enter one or more SA Identity Numbers
+    <strong>Please enter one or more SA Identity Numbers</strong>
   </div>
   <div class="card-body">
     <div class="input-group mb-3" *ngFor="let item of identityNumbers; let i = index">

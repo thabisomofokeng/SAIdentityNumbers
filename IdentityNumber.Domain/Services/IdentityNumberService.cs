@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using IdentityNumber.Domain.Entities;
+using IdentityNumber.Domain.Helpers;
 using IdentityNumber.Domain.Repositories;
 
 namespace IdentityNumber.Domain.Services
@@ -31,7 +32,7 @@ namespace IdentityNumber.Domain.Services
             return await _validIdentityNumberRepository.GetAsync();
         }
 
-        public async Task<Tuple<IEnumerable<ValidIdentityNumber>, IEnumerable<InvalidIdentityNumber>>> ProcessAsync(
+        public async Task<Tuple<IEnumerable<ValidIdentityNumber>, IEnumerable<InvalidIdentityNumber>>> ValidateAsync(
             List<string> identityNumbers)
         {
             Validate(identityNumbers);
@@ -45,15 +46,11 @@ namespace IdentityNumber.Domain.Services
 
                 var reasonsFailed = new List<string>();
 
-                if (identityNumber.Trim().Length != 13)
-                {
-                    reasonsFailed.Add("Identity Number has incorrect length.");
-                }
-
                 if (!long.TryParse(identityNumber, out var longIdentityNumber))
-                {
                     reasonsFailed.Add("Identity Number has invalid format.");
-                }
+
+                if (identityNumber.Trim().Length != 13)
+                    reasonsFailed.Add("Identity Number has incorrect length.");
 
                 if (reasonsFailed.Any())
                 {
@@ -64,6 +61,8 @@ namespace IdentityNumber.Domain.Services
                     };
 
                     await _invalidIdentityNumberRepository.AddAsync(invalidIdentityNumber);
+
+                    invalidIdentityNumbers.Add(invalidIdentityNumber);
 
                     return;
                 }
@@ -76,28 +75,19 @@ namespace IdentityNumber.Domain.Services
                 var birthDate = new DateTime(fourDigitYear, month, day);
 
                 if (birthDate.Year <= 0)
-                {
                     reasonsFailed.Add("Year of birth is invalid");
-                }
 
                 if (birthDate.Month <= 0)
-                {
                     reasonsFailed.Add("Month of birth is invalid");
-                }
 
                 if (birthDate.Day <= 0)
-                {
                     reasonsFailed.Add("Day of birth is invalid");
-                }
 
-                //todo: check gender
                 int.TryParse(identityNumber.Substring(6, 4), out var gender);
-
-                //todo: check cs
                 int.TryParse(identityNumber.Substring(10, 1), out var citizenship);
 
-                //todo: perform luhn 
-                int.TryParse(identityNumber.Substring(12, 1), out var checksum);
+                if (!identityNumber.ToString().LuhnCheck())
+                    reasonsFailed.Add("Identity number check is invalid");
 
                 if (reasonsFailed.Any())
                 {
