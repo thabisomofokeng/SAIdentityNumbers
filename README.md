@@ -1,4 +1,4 @@
-# SAIdentityNumbers
+# SA Identity Numbers
 ASP.NET Core 2.1 Web Api with AngularJS 5 front-end project for processing South African social security ID Numbers.
 
 The project processes a list of one or more South African ID Numbers, each result is appended to either the valid or invalid result file on the server, and the results are displayed in a grid on the UI.
