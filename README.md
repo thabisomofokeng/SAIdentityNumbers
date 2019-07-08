@@ -6,7 +6,7 @@ The project processes a list of one or more South African ID Numbers, each resul
 
 The web UI provides a facility to input a single ID number and also a mechanism to add more numbers to be submitted for validation at a single time. There is also a facility to upload one or more files containing a list of ID Numbers separated by a new line.
 
-## Solution design (N-tier)
+## Solution design (N-tier using Domain Driven Design approach)
 
 - Infrastracture Layer: IdentityNumber.Infrastructure includes data layer (Repository Pattern using CSVHelper) and Web Api project.
 - Domain/Business Layer: IdentityNumber.Domain (Facade Pattern implementation using services)
